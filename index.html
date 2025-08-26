@@ -7,6 +7,28 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <nav>
+    <!-- Кнопка в меню -->
+    <button id="openCodeEditor">Код</button>
+  </nav>
+  
+  <!-- Модальное окно редактора -->
+  <div id="codeEditorModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Vibe Coding Editor</h2>
+    
+    <div class="editors">
+      <textarea id="htmlCode" placeholder="HTML код"></textarea>
+      <textarea id="cssCode" placeholder="CSS код"></textarea>
+      <textarea id="jsCode" placeholder="JS код"></textarea>
+    </div>
+    
+    <button id="runCode">Запустить</button>
+    <iframe id="output" sandbox="allow-scripts"></iframe>
+  </div>
+</div>
+
 <video autoplay loop muted id="background">
   <source src="video/background.mp4" type="video/mp4">
 </video>
@@ -15,10 +37,10 @@
   <h2 id="track-name">Track Name</h2>
   <audio id="audio" controls></audio>
   <div class="buttons">
-    <button id="prev">⏮️</button>
-    <button id="play">▶️</button>
-    <button id="next">⏭️</button>
-    <button id="shuffle">🔀</button>
+    <button id="prev">⏮Б</button>
+    <button id="play">▶</button>
+    <button id="next">⏭</button>
+    <button id="shuffle">~</button>
   </div>
 </div>
 
