@@ -16,19 +16,19 @@
   
   <!-- Модальное окно редактора -->
   <div id="codeEditorModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Vibe Coding Editor</h2>
-    
-    <div class="editors">
-      <textarea id="htmlCode" placeholder="HTML код"></textarea>
-      <textarea id="cssCode" placeholder="CSS код"></textarea>
-      <textarea id="jsCode" placeholder="JS код"></textarea>
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Vibe Coding Editor</h2>
+      
+      <div class="editors">
+        <textarea id="htmlCode" placeholder="HTML код"></textarea>
+        <textarea id="cssCode" placeholder="CSS код"></textarea>
+        <textarea id="jsCode" placeholder="JS код"></textarea>
+      </div>
+      
+      <button id="runCode">Запустить</button>
+      <iframe id="output" sandbox="allow-scripts"></iframe>
     </div>
-    
-    <button id="runCode">Запустить</button>
-    <iframe id="output" sandbox="allow-scripts"></iframe>
-  </div>
 </div>
 
 <video autoplay loop muted id="background">
