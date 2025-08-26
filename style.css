@@ -58,7 +58,7 @@ body, html {
   margin: 5% auto;
   padding: 20px;
   border-radius: 15px;
-  width: 90%;
+  width: 80%;
   max-width: 1200px;
   color: #fff;
   display: flex;
@@ -88,7 +88,7 @@ textarea {
   border-radius: 10px;
   padding: 10px;
   font-family: monospace;
-  resize: vertical;
+  resize: none;
 }
 
 #runCode {
