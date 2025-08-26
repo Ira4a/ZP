@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <title>Vibe Coding App</title>
+  <title>Vibe Coding</title>
   <style>
     body {
       margin: 0;
@@ -14,6 +14,7 @@
       height: 100vh;
       overflow: hidden;
     }
+    /* Звёзды для атмосферы */
     .stars {
       width: 1px;
       height: 1px;
@@ -22,37 +23,31 @@
         100px 200px #fff, 300px 400px #fff, 500px 100px #fff,
         700px 300px #fff, 900px 500px #fff, 1100px 200px #fff;
       animation: animStar 50s linear infinite;
-    }
-    .stars::after {
-      content: " ";
       position: absolute;
-      top: 0;
-      width: 1px;
-      height: 1px;
-      background: transparent;
-      box-shadow: inherit;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
     }
     @keyframes animStar {
       from { transform: translateY(0px); }
       to { transform: translateY(-2000px); }
     }
+
     header {
       text-align: center;
-      padding: 15px;
-      font-size: 22px;
-      font-weight: bold;
+      padding: 10px;
+      font-size: 20px;
       background: rgba(0,0,0,0.3);
       animation: glow 3s ease-in-out infinite alternate;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     @keyframes glow {
       from { text-shadow: 0 0 5px #fff; }
       to { text-shadow: 0 0 20px #ff9dff; }
     }
-    #lesson {
-      text-align: center;
-      margin: 10px;
-      font-size: 18px;
-    }
+
     #editor {
       flex: 1;
       margin: 10px;
@@ -62,7 +57,9 @@
       width: 95%;
       color: white;
       font-family: monospace;
+      resize: none;
     }
+
     #output-frame {
       flex: 1;
       margin: 10px;
@@ -70,11 +67,12 @@
       border: none;
       background: white;
     }
+
     button {
-      margin: 5px;
-      padding: 8px 16px;
+      margin: 2px;
+      padding: 6px 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #77777788; /* нейтральный цвет */
       color: white;
       font-size: 14px;
@@ -85,99 +83,79 @@
       background: #999999cc;
       transform: scale(1.05);
     }
-    footer {
-      text-align: center;
-      padding: 10px;
-      font-size: 14px;
-      background: rgba(0,0,0,0.3);
-      animation: glow 4s ease-in-out infinite alternate;
-    }
-    #lang-select {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px;
+
+    select {
+      padding: 4px 8px;
       border-radius: 6px;
       border: none;
       font-size: 14px;
+      background: #77777788;
+      color: white;
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
 
-  <!-- Выбор языка -->
-  <select id="lang-select" onchange="changeLanguage()">
-    <option value="cs" selected>Čeština</option>
-    <option value="en">English</option>
-  </select>
-
-  <header id="title">🎧 Vibe Coding — uč se programovat v chill atmosféře</header>
-  <div id="lesson">📘 Úkol: napiš HTML, CSS a JS a klikni „Spustit“</div>
-
-  <textarea id="editor" style="height:150px;">
-<!-- Napiš HTML, CSS и JS сюда -->
-<div style="color: white; font-size:20px;">Hello Vibe!</div>
-<script>
-  console.log('Hello World');
-</script>
-  </textarea>
-
-  <div>
-    <button id="run-btn" onclick="runCode()">▶ Spustit</button>
-    <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio Zap/Vyp</button>
-  </div>
-
-  <iframe id="output-frame"></iframe>
-
-  <!-- Музыка: проверенное Lo-Fi радио -->
+  <header>
+    <div>
+      <select id="lang-select" onchange="changeLanguage()">
+        <option value="cs" selected>Čeština</option>
+        <option value="en">English</option>
+      </select>
+      <button id="rest-btn" onclick="toggleRest()">⏱ Odpočinek</button>
+      <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio</button>
+    </div>
+    <div id="title">🎧 Vibe Coding — chill programování</div>
+  </header>
+  
+  <!-- Музыка Lo-Fi -->
   <audio id="bg-music" loop>
-    <source src="https://stream.nightride.fm/lofi.mp3" type="audio/mpeg">
+    <source src="https://listen.radioking.com/radio/80207/stream/80010" type="audio/mpeg">
     Tvůj prohlížeč nepodporuje audio.
   </audio>
-
-  <footer id="footer">✨ Relaxuj & Uč se ✨</footer>
+  <textarea id="editor">// Napiš HTML, CSS, JS kód zde</textarea>
+  <button id="run-btn" onclick="runCode()">▶ Spustit</button>
+  <iframe id="output-frame"></iframe>
 
   <script>
+    // Тексты на языках
     const texts = {
-      cs: {
-        title: "🎧 Vibe Coding — uč se programovat v chill atmosféře",
-        lesson: "📘 Úkol: napiš HTML, CSS a JS a klikni „Spustit“",
-        run: "▶ Spustit",
-        music: "🎵 Lo-Fi Rádio Zap/Vyp",
-        footer: "✨ Relaxuj & Uč se ✨"
-      },
-      en: {
-        title: "🎧 Vibe Coding — learn to code in a chill vibe",
-        lesson: "📘 Task: write HTML, CSS, JS and click \"Run\"",
-        run: "▶ Run",
-        music: "🎵 Lo-Fi Radio On/Off",
-        footer: "✨ Relax & Learn ✨"
-      }
+      cs: { title: "🎧 Vibe Coding — chill programování", run:"▶ Spustit", rest:"⏱ Odpočinek", music:"🎵 Lo-Fi Rádio" },
+      en: { title: "🎧 Vibe Coding — chill coding", run:"▶ Run", rest:"⏱ Rest", music:"🎵 Lo-Fi Radio" }
     };
-
     let currentLang = "cs";
 
-    function changeLanguage() {
+    function changeLanguage(){
       currentLang = document.getElementById("lang-select").value;
-      const t = texts[currentLang];
-      document.getElementById("title").innerHTML = t.title;
-      document.getElementById("lesson").innerHTML = t.lesson;
-      document.getElementById("run-btn").innerText = t.run;
-      document.getElementById("music-btn").innerText = t.music;
-      document.getElementById("footer").innerText = t.footer;
+      document.getElementById("title").innerText = texts[currentLang].title;
+      document.getElementById("run-btn").innerText = texts[currentLang].run;
+      document.getElementById("rest-btn").innerText = texts[currentLang].rest;
+      document.getElementById("music-btn").innerText = texts[currentLang].music;
     }
 
-    function runCode() {
+    function runCode(){
       const code = document.getElementById("editor").value;
       const frame = document.getElementById("output-frame");
-      frame.srcdoc = code; // вставляем код прямо в iframe
+      frame.srcdoc = code;
     }
 
-    function toggleMusic() {
+    function toggleMusic(){
       const music = document.getElementById("bg-music");
-      if (music.paused) music.play();
+      if(music.paused) music.play();
       else music.pause();
+    }
+
+    // Таймер отдыха
+    let restActive = false;
+    function toggleRest(){
+      restActive = !restActive;
+      if(restActive){
+        alert(currentLang==="cs"?"Odpočinek zapnut":"Rest started");
+      } else {
+        alert(currentLang==="cs"?"Odpočinek ukončen":"Rest ended");
+      }
     }
   </script>
 </body>
