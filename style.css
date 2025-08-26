@@ -17,6 +17,11 @@ body, html {
   object-fit: cover;
   z-index: -1;
 }
+nav button {
+  background: none;
+  color: red;
+  border: none;
+}
 
 .player {
   text-align: center;
