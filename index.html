@@ -22,6 +22,19 @@
     z-index: 0;
   }
 
+  #music-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.4);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
   header {
     z-index: 1;
     display: flex;
@@ -68,15 +81,13 @@
     margin-top: 5px;
   }
 
-  body > * {
-    z-index: 1;
-  }
-
+  body > * { z-index: 1; }
 </style>
 </head>
 <body>
 
 <div class="stars"></div>
+<div id="music-bg"></div>
 
 <header>
   <div id="top-controls">
@@ -96,50 +107,59 @@
 
 <iframe id="output-frame"></iframe>
 
-<!-- Музыка Lo-Fi -->
-<audio id="bg-music" loop>
-  <source src="https://www.lofi.cafe/" type="audio/mpeg">
-  Tvůj prohlížeč nepodporuje audio.
-</audio>
+<!-- Плеер Lo-Fi (как на lofi.cafe) -->
+<iframe id="lofi-player" 
+        src="https://www.lofi.cafe/embed/" 
+        style="display:none; position:fixed; bottom:0; left:0; width:300px; height:80px; border:none;" 
+        allow="autoplay" 
+></iframe>
 
 <script>
-  const texts = {
-    cs: { title: "🎧 Vibe Coding — chill programování", run:"▶ Spustit", rest:"⏱ Odpočinek", music:"🎵 Lo-Fi Rádio" },
-    en: { title: "🎧 Vibe Coding — chill coding", run:"▶ Run", rest:"⏱ Rest", music:"🎵 Lo-Fi Radio" }
-  };
-  let currentLang = "cs";
+const texts = {
+  cs: { title: "🎧 Vibe Coding — chill programování", run:"▶ Spustit", rest:"⏱ Odpočinek", music:"🎵 Lo-Fi Rádio" },
+  en: { title: "🎧 Vibe Coding — chill coding", run:"▶ Run", rest:"⏱ Rest", music:"🎵 Lo-Fi Radio" }
+};
+let currentLang = "cs";
 
-  function changeLanguage(){
-    currentLang = document.getElementById("lang-select").value;
-    document.getElementById("title").innerText = texts[currentLang].title;
-    document.getElementById("run-btn").innerText = texts[currentLang].run;
-    document.getElementById("rest-btn").innerText = texts[currentLang].rest;
-    document.getElementById("music-btn").innerText = texts[currentLang].music;
-  }
+function changeLanguage(){
+  currentLang = document.getElementById("lang-select").value;
+  document.getElementById("title").innerText = texts[currentLang].title;
+  document.getElementById("run-btn").innerText = texts[currentLang].run;
+  document.getElementById("rest-btn").innerText = texts[currentLang].rest;
+  document.getElementById("music-btn").innerText = texts[currentLang].music;
+}
 
-  function runCode(){
-    const code = document.getElementById("editor").value;
-    const frame = document.getElementById("output-frame");
-    frame.srcdoc = code;
-  }
+function runCode(){
+  const code = document.getElementById("editor").value;
+  const frame = document.getElementById("output-frame");
+  frame.srcdoc = code;
+}
 
-  function toggleMusic(){
-    const music = document.getElementById("bg-music");
-    if(music.paused) music.play();
-    else music.pause();
-  }
+let musicPlaying = false;
+function toggleMusic(){
+  const player = document.getElementById("lofi-player");
+  const bg = document.getElementById("music-bg");
+  musicPlaying = !musicPlaying;
 
-  let restActive = false;
-  function toggleRest(){
-    restActive = !restActive;
-    if(restActive){
-      alert(currentLang==="cs"?"Odpočinek zapnut":"Rest started");
-    } else {
-      alert(currentLang==="cs"?"Odpočinek ukončen":"Rest ended");
-    }
+  if(musicPlaying){
+    player.style.display = "block"; // Показываем плеер
+    bg.style.opacity = 1;           // Включаем блюр-фон
+  } else {
+    player.style.display = "none";  // Скрываем плеер
+    bg.style.opacity = 0;           // Выключаем фон
   }
+}
+
+let restActive = false;
+function toggleRest(){
+  restActive = !restActive;
+  if(restActive){
+    alert(currentLang==="cs"?"Odpočinek zapnut":"Rest started");
+  } else {
+    alert(currentLang==="cs"?"Odpočinek ukončen":"Rest ended");
+  }
+}
 </script>
 
 </body>
 </html>
-
