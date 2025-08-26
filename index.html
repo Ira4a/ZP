@@ -1,167 +1,27 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vibe Coding</title>
-<style>
-  body, html {
-    margin: 0;
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at bottom, #1b2735 0%, #090a0f 100%);
-    color: white;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .stars {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    z-index: 0;
-  }
-
-  #music-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(12px);
-    background: rgba(0,0,0,0.4);
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-
-  header {
-    z-index: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0,0,0,0.3);
-    padding: 10px;
-    font-size: 18px;
-    position: relative;
-  }
-
-  #top-controls {
-    display: flex;
-    gap: 5px;
-  }
-
-  select, button {
-    padding: 5px 10px;
-    border-radius: 6px;
-    border: none;
-    background: #77777788;
-    color: white;
-    cursor: pointer;
-  }
-  select { appearance: none; }
-
-  #editor {
-    flex: 1;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    font-family: monospace;
-    resize: none;
-  }
-
-  #output-frame {
-    flex: 1;
-    width: 100%;
-    border: none;
-    border-radius: 6px;
-    margin-top: 5px;
-  }
-
-  body > * { z-index: 1; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Lofi Cafe</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<video autoplay loop muted id="background">
+  <source src="video/background.mp4" type="video/mp4">
+</video>
 
-<div class="stars"></div>
-<div id="music-bg"></div>
-
-<header>
-  <div id="top-controls">
-    <select id="lang-select" onchange="changeLanguage()">
-      <option value="cs" selected>Čeština</option>
-      <option value="en">English</option>
-    </select>
-    <button id="rest-btn" onclick="toggleRest()">⏱ Odpočinek</button>
-    <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio</button>
-    <button id="run-btn" onclick="runCode()">▶ Spustit</button>
+<div class="player">
+  <h2 id="track-name">Track Name</h2>
+  <audio id="audio" controls></audio>
+  <div class="buttons">
+    <button id="prev">⏮️</button>
+    <button id="play">▶️</button>
+    <button id="next">⏭️</button>
+    <button id="shuffle">🔀</button>
   </div>
-  <div id="title">🎧 Vibe Coding — chill programování</div>
-</header>
+</div>
 
-<textarea id="editor" style="height:200px;">&lt;h1 style="color:white;"&gt;Hello Vibe!&lt;/h1&gt;
-&lt;script&gt;console.log('Hello World');&lt;/script&gt;</textarea>
-
-<iframe id="output-frame"></iframe>
-
-<!-- YouTube Live Lo-Fi Stream -->
-<iframe id="lofi-player" 
-        width="0" height="0" 
-        src="https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1&loop=1&mute=0" 
-        title="Lofi Hip Hop Radio" 
-        allow="autoplay" frameborder="0"></iframe>
-
-<script>
-const texts = {
-  cs: { title: "🎧 Vibe Coding — chill programování", run:"▶ Spustit", rest:"⏱ Odpočinek", music:"🎵 Lo-Fi Rádio" },
-  en: { title: "🎧 Vibe Coding — chill coding", run:"▶ Run", rest:"⏱ Rest", music:"🎵 Lo-Fi Radio" }
-};
-let currentLang = "cs";
-
-function changeLanguage(){
-  currentLang = document.getElementById("lang-select").value;
-  document.getElementById("title").innerText = texts[currentLang].title;
-  document.getElementById("run-btn").innerText = texts[currentLang].run;
-  document.getElementById("rest-btn").innerText = texts[currentLang].rest;
-  document.getElementById("music-btn").innerText = texts[currentLang].music;
-}
-
-function runCode(){
-  const code = document.getElementById("editor").value;
-  const frame = document.getElementById("output-frame");
-  frame.srcdoc = code;
-}
-
-let musicPlaying = false;
-function toggleMusic(){
-  const bg = document.getElementById("music-bg");
-  const player = document.getElementById("lofi-player");
-  musicPlaying = !musicPlaying;
-
-  if(musicPlaying){
-    bg.style.opacity = 1;           // Включаем блюр-фон
-    player.width = 300;              // Показываем плеер (необязательно)
-    player.height = 80;
-  } else {
-    bg.style.opacity = 0;           // Выключаем фон
-    player.width = 0;               // Скрываем плеер
-    player.height = 0;
-  }
-}
-
-let restActive = false;
-function toggleRest(){
-  restActive = !restActive;
-  if(restActive){
-    alert(currentLang==="cs"?"Odpočinek zapnut":"Rest started");
-  } else {
-    alert(currentLang==="cs"?"Odpočinek ukončen":"Rest ended");
-  }
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
