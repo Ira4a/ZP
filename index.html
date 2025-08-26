@@ -14,7 +14,6 @@
       height: 100vh;
       overflow: hidden;
     }
-    /* ⭐ Звёздный фон */
     .stars {
       width: 1px;
       height: 1px;
@@ -64,27 +63,26 @@
       color: white;
       font-family: monospace;
     }
-    #output {
-      background: rgba(0,0,0,0.7);
+    #output-frame {
+      flex: 1;
       margin: 10px;
-      padding: 10px;
       border-radius: 10px;
-      font-family: monospace;
-      min-height: 50px;
+      border: none;
+      background: white;
     }
     button {
-      margin: 10px;
-      padding: 10px 20px;
+      margin: 5px;
+      padding: 8px 16px;
       border: none;
       border-radius: 8px;
-      background: #ff79c6;
+      background: #77777788; /* нейтральный цвет */
       color: white;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       transition: 0.3s;
     }
     button:hover {
-      background: #ff92d0;
+      background: #999999cc;
       transform: scale(1.05);
     }
     footer {
@@ -106,7 +104,6 @@
   </style>
 </head>
 <body>
-  <!-- Звёзды -->
   <div class="stars"></div>
 
   <!-- Выбор языка -->
@@ -116,18 +113,28 @@
   </select>
 
   <header id="title">🎧 Vibe Coding — uč se programovat v chill atmosféře</header>
-  <div id="lesson">📘 Úkol: napiš výraz <code>2 + 2</code> a klikni na „Spustit“</div>
-  
-  <textarea id="editor">// Napiš svůj kód zde</textarea>
-  <button id="run-btn" onclick="runCode()">▶ Spustit</button>
-  <div id="output">Výsledek se objeví zde...</div>
+  <div id="lesson">📘 Úkol: napiš HTML, CSS a JS a klikni „Spustit“</div>
 
-  <!-- Музыка -->
-  <audio id="bg-music" loop autoplay>
+  <textarea id="editor" style="height:150px;">
+<!-- Napiš HTML, CSS и JS сюда -->
+<div style="color: white; font-size:20px;">Hello Vibe!</div>
+<script>
+  console.log('Hello World');
+</script>
+  </textarea>
+
+  <div>
+    <button id="run-btn" onclick="runCode()">▶ Spustit</button>
+    <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio Zap/Vyp</button>
+  </div>
+
+  <iframe id="output-frame"></iframe>
+
+  <!-- Музыка: проверенное Lo-Fi радио -->
+  <audio id="bg-music" loop>
     <source src="https://stream.nightride.fm/lofi.mp3" type="audio/mpeg">
     Tvůj prohlížeč nepodporuje audio.
   </audio>
-  <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio Zap/Vyp</button>
 
   <footer id="footer">✨ Relaxuj & Uč se ✨</footer>
 
@@ -135,25 +142,17 @@
     const texts = {
       cs: {
         title: "🎧 Vibe Coding — uč se programovat v chill atmosféře",
-        lesson: "📘 Úkol: napiš výraz <code>2 + 2</code> a klikni na „Spustit“",
-        editor: "// Napiš svůj kód zde",
+        lesson: "📘 Úkol: napiš HTML, CSS a JS a klikni „Spustit“",
         run: "▶ Spustit",
-        output: "Výsledek se objeví zde...",
-        music: "🎵 Hudba Zap/Vyp",
-        footer: "✨ Relaxuj & Uč se ✨",
-        result: "Výsledek: ",
-        error: "Chyba: "
+        music: "🎵 Lo-Fi Rádio Zap/Vyp",
+        footer: "✨ Relaxuj & Uč se ✨"
       },
       en: {
         title: "🎧 Vibe Coding — learn to code in a chill vibe",
-        lesson: "📘 Task: write the expression <code>2 + 2</code> and click \"Run\"",
-        editor: "// Write your code here",
+        lesson: "📘 Task: write HTML, CSS, JS and click \"Run\"",
         run: "▶ Run",
-        output: "The result will appear here...",
-        music: "🎵 Music On/Off",
-        footer: "✨ Relax & Learn ✨",
-        result: "Result: ",
-        error: "Error: "
+        music: "🎵 Lo-Fi Radio On/Off",
+        footer: "✨ Relax & Learn ✨"
       }
     };
 
@@ -164,31 +163,21 @@
       const t = texts[currentLang];
       document.getElementById("title").innerHTML = t.title;
       document.getElementById("lesson").innerHTML = t.lesson;
-      document.getElementById("editor").value = t.editor;
       document.getElementById("run-btn").innerText = t.run;
-      document.getElementById("output").innerText = t.output;
       document.getElementById("music-btn").innerText = t.music;
       document.getElementById("footer").innerText = t.footer;
     }
 
     function runCode() {
       const code = document.getElementById("editor").value;
-      const outputDiv = document.getElementById("output");
-      try {
-        let result = eval(code);
-        outputDiv.innerText = texts[currentLang].result + result;
-      } catch (err) {
-        outputDiv.innerText = texts[currentLang].error + err.message;
-      }
+      const frame = document.getElementById("output-frame");
+      frame.srcdoc = code; // вставляем код прямо в iframe
     }
 
     function toggleMusic() {
       const music = document.getElementById("bg-music");
-      if (music.paused) {
-        music.play();
-      } else {
-        music.pause();
-      }
+      if (music.paused) music.play();
+      else music.pause();
     }
   </script>
 </body>
