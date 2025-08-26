@@ -1,162 +1,89 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Vibe Coding</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at bottom, #1b2735 0%, #090a0f 100%);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-    /* Звёзды для атмосферы */
-    .stars {
-      width: 1px;
-      height: 1px;
-      background: transparent;
-      box-shadow: 
-        100px 200px #fff, 300px 400px #fff, 500px 100px #fff,
-        700px 300px #fff, 900px 500px #fff, 1100px 200px #fff;
-      animation: animStar 50s linear infinite;
-      position: absolute;
-      top:0; left:0;
-      width:100%; height:100%;
-      pointer-events:none;
-    }
-    @keyframes animStar {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-2000px); }
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding 2.0</title>
+<style>
+  body { margin:0; font-family: 'Arial', sans-serif; background: #1e1e1e; color: #eee; }
+  .container { display:flex; flex-direction:column; height:100vh; }
 
-    header {
-      text-align: center;
-      padding: 10px;
-      font-size: 20px;
-      background: rgba(0,0,0,0.3);
-      animation: glow 3s ease-in-out infinite alternate;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 5px #fff; }
-      to { text-shadow: 0 0 20px #ff9dff; }
-    }
+  /* Horizontal editor + output */
+  .editor-output { display:flex; flex:1; overflow:hidden; background:#2e2e2e; }
+  .pane { flex:1; margin:5px; display:flex; flex-direction:column; }
+  textarea { flex:1; width:100%; resize:none; background:#1e1e1e; color:#cfcfcf; border:none; padding:10px; font-family: monospace; font-size:16px; }
+  iframe { flex:1; border:none; background:#fff; }
+  .merge-btn { background:#444; color:#fff; border:none; padding:5px; cursor:pointer; margin-top:5px; }
 
-    #editor {
-      flex: 1;
-      margin: 10px;
-      padding: 10px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 10px;
-      width: 95%;
-      color: white;
-      font-family: monospace;
-      resize: none;
-    }
+  /* Timer */
+  .timer-container { display:flex; justify-content:center; align-items:center; padding:10px; background:#111; }
+  .timer { font-size:24px; font-weight:bold; background:#333; padding:10px 20px; border-radius:10px; color:#0f0; }
 
-    #output-frame {
-      flex: 1;
-      margin: 10px;
-      border-radius: 10px;
-      border: none;
-      background: white;
-    }
-
-    button {
-      margin: 2px;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #77777788; /* нейтральный цвет */
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #999999cc;
-      transform: scale(1.05);
-    }
-
-    select {
-      padding: 4px 8px;
-      border-radius: 6px;
-      border: none;
-      font-size: 14px;
-      background: #77777788;
-      color: white;
-      margin-right: 5px;
-    }
-  </style>
+  /* Radio */
+  .radio-container { display:flex; justify-content:center; padding:10px; background:#111; }
+  audio { outline:none; }
+</style>
 </head>
 <body>
-  <div class="stars"></div>
-
-  <header>
-    <div>
-      <select id="lang-select" onchange="changeLanguage()">
-        <option value="cs" selected>Čeština</option>
-        <option value="en">English</option>
-      </select>
-      <button id="rest-btn" onclick="toggleRest()">⏱ Odpočinek</button>
-      <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio</button>
+<div class="container">
+  <div class="editor-output" id="editorOutput">
+    <div class="pane">
+      <textarea id="code" placeholder="Напиши код здесь..."></textarea>
+      <button class="merge-btn" onclick="toggleMerge('code')">Развернуть/Свернуть редактор</button>
     </div>
-    <div id="title">🎧 Vibe Coding — chill programování</div>
-  </header>
-  
-  <!-- Музыка Lo-Fi -->
-  <audio id="bg-music" loop>
-    <source src="https://listen.radioking.com/radio/80207/stream/80010" type="audio/mpeg">
-    Tvůj prohlížeč nepodporuje audio.
-  </audio>
-  <textarea id="editor">// Napiš HTML, CSS, JS kód zde</textarea>
-  <button id="run-btn" onclick="runCode()">▶ Spustit</button>
-  <iframe id="output-frame"></iframe>
+    <div class="pane">
+      <iframe id="output"></iframe>
+      <button class="merge-btn" onclick="toggleMerge('output')">Развернуть/Свернуть вывод</button>
+    </div>
+  </div>
 
-  <script>
-    // Тексты на языках
-    const texts = {
-      cs: { title: "🎧 Vibe Coding — chill programování", run:"▶ Spustit", rest:"⏱ Odpočinek", music:"🎵 Lo-Fi Rádio" },
-      en: { title: "🎧 Vibe Coding — chill coding", run:"▶ Run", rest:"⏱ Rest", music:"🎵 Lo-Fi Radio" }
-    };
-    let currentLang = "cs";
+  <div class="timer-container">
+    <div class="timer" id="timer">25:00</div>
+  </div>
 
-    function changeLanguage(){
-      currentLang = document.getElementById("lang-select").value;
-      document.getElementById("title").innerText = texts[currentLang].title;
-      document.getElementById("run-btn").innerText = texts[currentLang].run;
-      document.getElementById("rest-btn").innerText = texts[currentLang].rest;
-      document.getElementById("music-btn").innerText = texts[currentLang].music;
+  <div class="radio-container">
+    <audio controls autoplay loop>
+      <source src="https://icecast.lofi-radio.com/lofi.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+</div>
+
+<script>
+// Компиляция/отображение кода
+const codeArea = document.getElementById('code');
+const outputFrame = document.getElementById('output');
+codeArea.addEventListener('input', () => {
+    const code = codeArea.value;
+    outputFrame.srcdoc = code;
+});
+
+// Merge/expand
+function toggleMerge(pane) {
+    const editorOutput = document.getElementById('editorOutput');
+    const panes = editorOutput.querySelectorAll('.pane');
+    if (pane === 'code') {
+        panes[0].style.flex = panes[0].style.flex === '1' ? '10' : '1';
+        panes[1].style.flex = panes[0].style.flex === '10' ? '0' : '1';
+    } else {
+        panes[1].style.flex = panes[1].style.flex === '1' ? '10' : '1';
+        panes[0].style.flex = panes[1].style.flex === '10' ? '0' : '1';
     }
+}
 
-    function runCode(){
-      const code = document.getElementById("editor").value;
-      const frame = document.getElementById("output-frame");
-      frame.srcdoc = code;
-    }
-
-    function toggleMusic(){
-      const music = document.getElementById("bg-music");
-      if(music.paused) music.play();
-      else music.pause();
-    }
-
-    // Таймер отдыха
-    let restActive = false;
-    function toggleRest(){
-      restActive = !restActive;
-      if(restActive){
-        alert(currentLang==="cs"?"Odpočinek zapnut":"Rest started");
-      } else {
-        alert(currentLang==="cs"?"Odpočinek ukončen":"Rest ended");
-      }
-    }
-  </script>
+// Таймер отдыха (пример: 25 минут)
+let timerDuration = 25 * 60; // секунд
+const timerEl = document.getElementById('timer');
+function startTimer() {
+    const interval = setInterval(() => {
+        const minutes = Math.floor(timerDuration / 60).toString().padStart(2,'0');
+        const seconds = (timerDuration % 60).toString().padStart(2,'0');
+        timerEl.textContent = `${minutes}:${seconds}`;
+        if(timerDuration <= 0){ clearInterval(interval); }
+        timerDuration--;
+    }, 1000);
+}
+startTimer();
+</script>
 </body>
 </html>
