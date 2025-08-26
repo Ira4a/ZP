@@ -1,5 +1,4 @@
 //CODE EDITOR
-// Переменные
 const modal = document.getElementById('codeEditorModal');
 const openBtn = document.getElementById('openCodeEditor');
 const closeBtn = document.querySelector('.close');
