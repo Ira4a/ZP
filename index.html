@@ -7,10 +7,12 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav>
-    <!-- Кнопка в меню -->
-    <button id="openCodeEditor">Code Editor</button>
-  </nav>
+  <header>
+    <nav>
+      <!-- Кнопка в меню -->
+      <button id="openCodeEditor">Code Editor</button>
+    </nav>
+  </header>
   
   <!-- Модальное окно редактора -->
   <div id="codeEditorModal" class="modal">
@@ -32,18 +34,19 @@
 <video autoplay loop muted id="background">
   <source src="video/background.mp4" type="video/mp4">
 </video>
-
-<div class="player">
-  <h2 id="track-name">Track Name</h2>
-  <audio id="audio" controls></audio>
-  <div class="buttons">
-    <button id="prev">⏮</button>
-    <button id="play">▶</button>
-    <button id="next">⏭</button>
-    <button id="shuffle">~</button>
+  
+<footer>
+  <div class="player">
+    <h2 id="track-name">Track Name</h2>
+    <audio id="audio" controls></audio>
+    <div class="buttons">
+      <button id="prev">⏮</button>
+      <button id="play">▶</button>
+      <button id="next">⏭</button>
+      <button id="shuffle">~</button>
+    </div>
   </div>
-</div>
-
+</footer>
 <script src="script.js"></script>
 </body>
 </html>
