@@ -107,12 +107,12 @@
 
 <iframe id="output-frame"></iframe>
 
-<!-- Плеер Lo-Fi (как на lofi.cafe) -->
+<!-- YouTube Live Lo-Fi Stream -->
 <iframe id="lofi-player" 
-        src="https://www.lofi.cafe/embed/" 
-        style="display:none; position:fixed; bottom:0; left:0; width:300px; height:80px; border:none;" 
-        allow="autoplay" 
-></iframe>
+        width="0" height="0" 
+        src="https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1&loop=1&mute=0" 
+        title="Lofi Hip Hop Radio" 
+        allow="autoplay" frameborder="0"></iframe>
 
 <script>
 const texts = {
@@ -137,16 +137,18 @@ function runCode(){
 
 let musicPlaying = false;
 function toggleMusic(){
-  const player = document.getElementById("lofi-player");
   const bg = document.getElementById("music-bg");
+  const player = document.getElementById("lofi-player");
   musicPlaying = !musicPlaying;
 
   if(musicPlaying){
-    player.style.display = "block"; // Показываем плеер
     bg.style.opacity = 1;           // Включаем блюр-фон
+    player.width = 300;              // Показываем плеер (необязательно)
+    player.height = 80;
   } else {
-    player.style.display = "none";  // Скрываем плеер
     bg.style.opacity = 0;           // Выключаем фон
+    player.width = 0;               // Скрываем плеер
+    player.height = 0;
   }
 }
 
