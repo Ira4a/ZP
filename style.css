@@ -21,6 +21,7 @@ nav button {
   background: none;
   color: red;
   border: none;
+  cursor: point;
 }
 
 .player {
