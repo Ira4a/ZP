@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Vibe Coding App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at bottom, #1b2735 0%, #090a0f 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* ⭐ Звёздный фон */
+    .stars {
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 
+        100px 200px #fff, 300px 400px #fff, 500px 100px #fff,
+        700px 300px #fff, 900px 500px #fff, 1100px 200px #fff;
+      animation: animStar 50s linear infinite;
+    }
+    .stars::after {
+      content: " ";
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: inherit;
+    }
+    @keyframes animStar {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-2000px); }
+    }
+    header {
+      text-align: center;
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.3);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #fff; }
+      to { text-shadow: 0 0 20px #ff9dff; }
+    }
+    #lesson {
+      text-align: center;
+      margin: 10px;
+      font-size: 18px;
+    }
+    #editor {
+      flex: 1;
+      margin: 10px;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 10px;
+      width: 95%;
+      color: white;
+      font-family: monospace;
+    }
+    #output {
+      background: rgba(0,0,0,0.7);
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      font-family: monospace;
+      min-height: 50px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #ff79c6;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff92d0;
+      transform: scale(1.05);
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      background: rgba(0,0,0,0.3);
+      animation: glow 4s ease-in-out infinite alternate;
+    }
+    #lang-select {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Звёзды -->
+  <div class="stars"></div>
+
+  <!-- Выбор языка -->
+  <select id="lang-select" onchange="changeLanguage()">
+    <option value="cs" selected>Čeština</option>
+    <option value="en">English</option>
+  </select>
+
+  <header id="title">🎧 Vibe Coding — uč se programovat v chill atmosféře</header>
+  <div id="lesson">📘 Úkol: napiš výraz <code>2 + 2</code> a klikni na „Spustit“</div>
+  
+  <textarea id="editor">// Napiš svůj kód zde</textarea>
+  <button id="run-btn" onclick="runCode()">▶ Spustit</button>
+  <div id="output">Výsledek se objeví zde...</div>
+
+  <!-- Музыка -->
+  <audio id="bg-music" loop autoplay>
+    <source src="https://stream.nightride.fm/lofi.mp3" type="audio/mpeg">
+    Tvůj prohlížeč nepodporuje audio.
+  </audio>
+  <button id="music-btn" onclick="toggleMusic()">🎵 Lo-Fi Rádio Zap/Vyp</button>
+
+  <footer id="footer">✨ Relaxuj & Uč se ✨</footer>
+
+  <script>
+    const texts = {
+      cs: {
+        title: "🎧 Vibe Coding — uč se programovat v chill atmosféře",
+        lesson: "📘 Úkol: napiš výraz <code>2 + 2</code> a klikni na „Spustit“",
+        editor: "// Napiš svůj kód zde",
+        run: "▶ Spustit",
+        output: "Výsledek se objeví zde...",
+        music: "🎵 Hudba Zap/Vyp",
+        footer: "✨ Relaxuj & Uč se ✨",
+        result: "Výsledek: ",
+        error: "Chyba: "
+      },
+      en: {
+        title: "🎧 Vibe Coding — learn to code in a chill vibe",
+        lesson: "📘 Task: write the expression <code>2 + 2</code> and click \"Run\"",
+        editor: "// Write your code here",
+        run: "▶ Run",
+        output: "The result will appear here...",
+        music: "🎵 Music On/Off",
+        footer: "✨ Relax & Learn ✨",
+        result: "Result: ",
+        error: "Error: "
+      }
+    };
+
+    let currentLang = "cs";
+
+    function changeLanguage() {
+      currentLang = document.getElementById("lang-select").value;
+      const t = texts[currentLang];
+      document.getElementById("title").innerHTML = t.title;
+      document.getElementById("lesson").innerHTML = t.lesson;
+      document.getElementById("editor").value = t.editor;
+      document.getElementById("run-btn").innerText = t.run;
+      document.getElementById("output").innerText = t.output;
+      document.getElementById("music-btn").innerText = t.music;
+      document.getElementById("footer").innerText = t.footer;
+    }
+
+    function runCode() {
+      const code = document.getElementById("editor").value;
+      const outputDiv = document.getElementById("output");
+      try {
+        let result = eval(code);
+        outputDiv.innerText = texts[currentLang].result + result;
+      } catch (err) {
+        outputDiv.innerText = texts[currentLang].error + err.message;
+      }
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bg-music");
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }
+  </script>
+</body>
+</html>
