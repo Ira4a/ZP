@@ -1,150 +1,89 @@
-// ---------- Таймер ----------
+// ------------ Background Slider ------------
+const backgrounds = [
+  "video/background1.mp4",
+  "video/background2.mp4",
+  "video/background3.mp4"
+];
+let bgIndex = 0;
+const bg = document.getElementById('background');
+function changeBackground() {
+  bgIndex = (bgIndex+1) % backgrounds.length;
+  bg.src = backgrounds[bgIndex];
+}
+setInterval(changeBackground, 15000); // смена каждые 15 секунд
+
+// ------------ Timer ------------
 const timerModal = document.getElementById('timerModal');
 const openTimerBtn = document.getElementById('openTimer');
 const closeTimerBtn = document.querySelector('.closeTimer');
-
 const timerDisplay = document.getElementById('timerDisplay');
 const startPauseBtn = document.getElementById('startPause');
 const restartBtn = document.getElementById('restart');
 const stopBtn = document.getElementById('stop');
+const minInput = document.getElementById('minInput');
+const secInput = document.getElementById('secInput');
 
-let timer;
-let timeLeft = 25 * 60; // 25 минут
-let isRunning = false;
+let timer, timeLeft=1500, isRunning=false;
 
-function updateDisplay() {
-  let minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  timerDisplay.textContent = 
-    `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+function updateDisplay(){
+  let m=Math.floor(timeLeft/60), s=timeLeft%60;
+  timerDisplay.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
+openTimerBtn.onclick=()=> timerModal.style.display='block';
+closeTimerBtn.onclick=()=> timerModal.style.display='none';
+window.onclick=(e)=>{if(e.target==timerModal) timerModal.style.display='none';};
 
-// Открыть/закрыть окно
-openTimerBtn.addEventListener('click', () => timerModal.style.display = 'block');
-closeTimerBtn.addEventListener('click', () => timerModal.style.display = 'none');
-window.addEventListener('click', e => { if(e.target === timerModal) timerModal.style.display = 'none'; });
-
-// Пуск/Пауза
-startPauseBtn.addEventListener('click', () => {
-  if (!isRunning) {
-    timer = setInterval(() => {
-      if (timeLeft > 0) {
-        timeLeft--;
-        updateDisplay();
-      } else {
-        clearInterval(timer);
-        isRunning = false;
-        alert("⏰ Время вышло!");
-      }
-    }, 1000);
-    isRunning = true;
-    startPauseBtn.textContent = "⏸ Пауза";
+startPauseBtn.onclick=()=>{
+  if(!isRunning){
+    if(minInput.value || secInput.value){
+      timeLeft = (parseInt(minInput.value)||0)*60 + (parseInt(secInput.value)||0);
+    }
+    timer=setInterval(()=>{
+      if(timeLeft>0){ timeLeft--; updateDisplay();}
+      else{clearInterval(timer); isRunning=false; alert("⏰ Done!");}
+    },1000);
+    isRunning=true; startPauseBtn.textContent="⏸ Pause";
   } else {
-    clearInterval(timer);
-    isRunning = false;
-    startPauseBtn.textContent = "> Пуск";
+    clearInterval(timer); isRunning=false; startPauseBtn.textContent="▶ Start";
   }
-});
-
-// Перезапуск
-restartBtn.addEventListener('click', () => {
-  clearInterval(timer);
-  timeLeft = 25 * 60;
-  updateDisplay();
-  isRunning = false;
-  startPauseBtn.textContent = "️> Пуск";
-});
-
-// Закончить
-stopBtn.addEventListener('click', () => {
-  clearInterval(timer);
-  timeLeft = 0;
-  updateDisplay();
-  isRunning = false;
-  startPauseBtn.textContent = "> Пуск";
-});
-
+};
+restartBtn.onclick=()=>{clearInterval(timer); timeLeft=1500; updateDisplay(); isRunning=false; startPauseBtn.textContent="▶ Start";}
+stopBtn.onclick=()=>{clearInterval(timer); timeLeft=0; updateDisplay(); isRunning=false; startPauseBtn.textContent="▶ Start";}
 updateDisplay();
 
-//CODE EDITOR
-const modal = document.getElementById('codeEditorModal');
-const openBtn = document.getElementById('openCodeEditor');
-const closeBtn = document.querySelector('.close');
-const runBtn = document.getElementById('runCode');
+// ------------ Music Player ------------
+const tracks=[{src:"music/track1.mp3",name:"Track 1"},{src:"music/track2.mp3",name:"Track 2"}];
+let current=0;
+const audio=document.getElementById('audio');
+const trackName=document.getElementById('track-name');
+const playBtn=document.getElementById('play');
 
-const htmlCode = document.getElementById('htmlCode');
-const cssCode = document.getElementById('cssCode');
-const jsCode = document.getElementById('jsCode');
-const output = document.getElementById('output');
-
-// Открытие редактора
-openBtn.addEventListener('click', () => {
-  modal.style.display = 'block';
-});
-
-// Закрытие редактора
-closeBtn.addEventListener('click', () => {
-  modal.style.display = 'none';
-});
-
-// Закрытие при клике вне окна
-window.addEventListener('click', (e) => {
-  if (e.target === modal) modal.style.display = 'none';
-});
-
-// Компиляция кода
-runBtn.addEventListener('click', () => {
-  const code = `
-    <html>
-      <head>
-        <style>${cssCode.value}</style>
-      </head>
-      <body>
-        ${htmlCode.value}
-        <script>${jsCode.value}<\/script>
-      </body>
-    </html>
-  `;
-  output.srcdoc = code;
-});
-
-//MUSIC
-const tracks = [
-  {src: "music/track1.mp3"},
-  {src: "music/track2.mp3"},
-  {src: "music/track3.mp3"}
-];
-
-let current = 0;
-let isShuffle = false;
-
-const audio = document.getElementById('audio');
-const trackName = document.getElementById('track-name');
-
-function loadTrack(index) {
-  audio.src = tracks[index].src;
-  trackName.textContent = tracks[index].name;
-  audio.play();
+function loadTrack(i){
+  audio.src=tracks[i].src; trackName.textContent=tracks[i].name; audio.play();
+  playBtn.textContent="⏸";
 }
-
-document.getElementById('play').addEventListener('click', () => {
-  if(audio.paused) audio.play();
-  else audio.pause();
-});
-
-document.getElementById('next').addEventListener('click', () => {
-  current = isShuffle ? Math.floor(Math.random() * tracks.length) : (current + 1) % tracks.length;
-  loadTrack(current);
-});
-
-document.getElementById('prev').addEventListener('click', () => {
-  current = isShuffle ? Math.floor(Math.random() * tracks.length) : (current - 1 + tracks.length) % tracks.length;
-  loadTrack(current);
-});
-
-audio.addEventListener('ended', () => {
-  current = (current + 1) % tracks.length;
-  loadTrack(current);
-});
-
+document.getElementById('next').onclick=()=>{current=(current+1)%tracks.length; loadTrack(current);}
+document.getElementById('prev').onclick=()=>{current=(current-1+tracks.length)%tracks.length; loadTrack(current);}
+playBtn.onclick=()=>{ if(audio.paused){audio.play(); playBtn.textContent="⏸";} else{audio.pause(); playBtn.textContent="▶";}};
+audio.onended=()=>{current=(current+1)%tracks.length; loadTrack(current);}
 loadTrack(current);
+
+// ------------ Lang Switch EN / CZ ------------
+const langBtn=document.getElementById('langSwitch');
+let lang="en";
+const dict={
+  en:{start:"▶ Start",pause:"⏸ Pause",restart:"↻ Restart",stop:"■ Stop",timer:"Timer"},
+  cz:{start:"▶ Start",pause:"⏸ Pauza",restart:"↻ Restart",stop:"■ Stop",timer:"Časovač"}
+};
+function setLang(l){
+  startPauseBtn.textContent = dict[l].start;
+  restartBtn.textContent = dict[l].restart;
+  stopBtn.textContent = dict[l].stop;
+  document.getElementById('timerTitle').textContent = dict[l].timer;
+}
+langBtn.onclick=()=>{
+  lang=(lang==="en"?"cz":"en");
+  langBtn.textContent=(lang==="en"?"Čeština":"English");
+  setLang(lang);
+};
+setLang("en");
