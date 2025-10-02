@@ -4,57 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vibe Coding</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body,html {
+    margin:0; padding:0; height:100%; width:100%;
+    font-family: Arial, sans-serif; color:white; text-align:center;
+    overflow:hidden;
+  }
+  header nav { position: fixed; top:10px; left:10px; z-index:1000; }
+  header nav button { margin-right:10px; }
+  video.bg {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    object-fit: cover; z-index:-1;
+  }
+  footer { position: fixed; bottom:10px; left:50%; transform:translateX(-50%); }
+  .player button { font-size:22px; margin: 0 5px; }
+  #langSwitch { position:fixed; top:10px; right:10px; z-index:1000; }
+  .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); }
+  .modal-content { background:#222; color:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; }
+</style>
 </head>
 <body>
-  <header>
-    <nav>
-      <!-- Кнопка в меню -->
-      <button id="openCodeEditor">Code Editor</button>
-      <button id="openTimer">Timer</button>
-    </nav>
-  </header>
-  
-  <!-- Модальное окно таймера -->
-  <div id="timerModal" class="modal">
-    <div class="modal-content">
-      <span class="closeTimer">&times;</span>
+<header>
+  <nav>
+    <button id="openCodeEditor">Code Editor</button>
+    <button id="openTimer">Timer</button>
+  </nav>
+  <button id="langSwitch">Čeština</button>
+</header>
 
-      <div id="timerDisplay">25:00</div>
-      
-      <div class="timer-buttons">
-        <button id="startPause">Пуск</button>
-        <button id="restart">Перезапуск</button>
-        <button id="stop">Закончить</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Модальное окно редактора -->
-  <div id="codeEditorModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Vibe Coding Editor</h2>
-      
-      <div class="editors">
-        <textarea id="htmlCode" placeholder="HTML код"></textarea>
-        <textarea id="cssCode" placeholder="CSS код"></textarea>
-        <textarea id="jsCode" placeholder="JS код"></textarea>
-      </div>
-      
-      <button id="runCode">Запустить</button>
-      <iframe id="output" sandbox="allow-scripts"></iframe>
-    </div>
-</div>
-
-<video autoplay loop muted id="background">
+<!-- Background videos/images -->
+<video autoplay loop muted class="bg" id="background">
   <source src="video/background1.mp4" type="video/mp4">
 </video>
-  
+
+<!-- Timer Modal -->
+<div id="timerModal" class="modal">
+  <div class="modal-content">
+    <span class="closeTimer">&times;</span>
+    <h3 id="timerTitle">Timer</h3>
+    <input type="number" id="minInput" placeholder="Min" style="width:50px"> :
+    <input type="number" id="secInput" placeholder="Sec" style="width:50px">
+    <div id="timerDisplay">25:00</div>
+    <div class="timer-buttons">
+      <button id="startPause">▶ Start</button>
+      <button id="restart">↻ Restart</button>
+      <button id="stop">■ Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Music Player -->
 <footer>
   <div class="player">
-    <h2 id="track-name">Track Name</h2>
-    <audio id="audio" controls></audio>
+    <h2 id="track-name">Track</h2>
+    <audio id="audio"></audio>
     <div class="buttons">
       <button id="prev">⏮</button>
       <button id="play">▶</button>
@@ -62,6 +65,9 @@
     </div>
   </div>
 </footer>
-<script src="script.js"></script>
+
+<script>
+
+</script>
 </body>
 </html>
