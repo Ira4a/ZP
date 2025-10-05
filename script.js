@@ -110,9 +110,9 @@ runBtn.addEventListener('click', () => {
 
 // ---------- Hudba ----------
 const tracks = [
-  {src: "music/track1.mp3", name:"Skladba 1"},
-  {src: "music/track2.mp3", name:"Skladba 2"},
-  {src: "music/track3.mp3", name:"Skladba 3"}
+  {src: "music/track1.mp3"},
+  {src: "music/track2.mp3"},
+  {src: "music/track3.mp3"}
 ];
 
 let current = 0;
