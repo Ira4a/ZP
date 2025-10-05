@@ -11,6 +11,7 @@
     <nav>
       <button id="openCodeEditor">Editor kódu</button>
       <button id="openTimer">Časovač</button>
+      <button id="changeBackground">Změnit pozadí</button>
     </nav>
   </header>
   
@@ -42,53 +43,45 @@
       <button id="runCode">Spustit</button>
       <iframe id="output" sandbox="allow-scripts"></iframe>
     </div>
-</div>
+  </div>
 
-<!-- Background video slider -->
-<div id="backgroundContainer">
-  <video autoplay loop muted id="background">
+  <!-- Background selector modal -->
+  <div id="bgModal" class="modal">
+    <div class="modal-content">
+      <span class="closeBg">&times;</span>
+      <h2>Vyberte pozadí</h2>
+      <div class="background-options">
+        <div class="bg-option active" data-bg="video/background1.mp4">
+          <div class="bg-preview" style="background: #333;"></div>
+          <span>Pozadí 1</span>
+        </div>
+        <div class="bg-option" data-bg="video/back2.mp4">
+          <div class="bg-preview" style="background: #555;"></div>
+          <span>Pozadí 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video backgrounds -->
+  <video autoplay loop muted id="background1" class="background-video active">
     <source src="video/background1.mp4" type="video/mp4">
-    <source src="video/back2.mp4" type="video/mp4">
-    <source src="video/back3.mp4" type="video/mp4">
-    <source src="video/back4.mp4" type="video/mp4">
   </video>
-</div>
-
-<!-- Background selector modal -->
-<div id="bgModal" class="modal">
-  <div class="modal-content">
-    <span class="closeBg">&times;</span>
-    <h2>Vyberte pozadí</h2>
-    <div class="background-options">
-      <div class="bg-option active" data-bg="video/background1.mp4">
-        <img src="thumb1.jpg" alt="Background 1">
-        <span>Pozadí 1</span>
-      </div>
-      <div class="bg-option" data-bg="video/back2.mp4">
-        <img src="thumb2.jpg" alt="Background 2">
-        <span>Pozadí 2</span>
-      </div>
-       <div class="bg-option" data-bg="video/back3.mp4">
-        <img src="thumb2.jpg" alt="Background 3">
-        <span>Pozadí 3</span>
-      </div>
-       <div class="bg-option" data-bg="video/back4.mp4">
-        <img src="thumb2.jpg" alt="Background 4">
-        <span>Pozadí 4</span>
-      </div>
-    </div>
-  </div>
+  <video autoplay loop muted id="background2" class="background-video">
+    <source src="video/back2.mp4" type="video/mp4">
+  </video>
   
-<footer>
-  <div class="player">
-    <audio id="audio" controls></audio>
-    <div class="buttons">
-      <button id="prev">⏮</button>
-      <button id="play">▶</button>
-      <button id="next">⏭</button>
+  <footer>
+    <div class="player">
+      <div id="track-name">Track Name</div>
+      <audio id="audio" controls></audio>
+      <div class="buttons">
+        <button id="prev">⏮</button>
+        <button id="play">▶</button>
+        <button id="next">⏭</button>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
 <script src="script.js"></script>
 </body>
