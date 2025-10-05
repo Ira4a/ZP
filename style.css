@@ -514,6 +514,93 @@ body {
     color: #667eea;
 }
 
+.light-theme {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.light-theme .player-card,
+.light-theme .stats,
+.light-theme .chat,
+.light-theme .modal-content {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .nav-btn,
+.light-theme .timer-btn,
+.light-theme .preset-btn {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .message {
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+button {
+    transition: all 0.2s ease !important;
+}
+
+button:active {
+    transform: scale(0.95) !important;
+}
+
+.visualizer-bars {
+    gap: 3px;
+    height: 50px;
+    align-items: end;
+}
+
+.bar {
+    width: 8px;
+    background: linear-gradient(180deg, #667eea, #764ba2);
+    border-radius: 4px;
+    animation: equalizer 1.5s ease-in-out infinite;
+    animation-play-state: paused;
+}
+
+.modal {
+    z-index: 10000;
+}
+
+.progress-bar {
+    cursor: pointer;
+}
+
+.progress-bar:hover .progress {
+    background: linear-gradient(90deg, #764ba2, #667eea);
+}
+
+@media (max-width: 768px) {
+    .nav-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .player-controls {
+        gap: 10px;
+    }
+    
+    .control-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .play-btn {
+        width: 60px;
+        height: 60px;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
