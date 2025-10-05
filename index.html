@@ -1,88 +1,178 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vibe Coding</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lofi Coding Cafe</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <nav>
-      <button id="openCodeEditor">Editor kódu</button>
-      <button id="openTimer">Časovač</button>
-      <button id="changeBackground">Změnit pozadí</button>
-    </nav>
-  </header>
-  
-  <!-- Okno časovače -->
-  <div id="timerModal" class="modal">
-    <div class="modal-content">
-      <span class="closeTimer">&times;</span>
-      <div id="timerDisplay">25:00</div>
-      <div class="timer-buttons">
-        <button id="startPause">Spustit</button>
-        <button id="restart">Restartovat</button>
-        <button id="stop">Ukončit</button>
-      </div>
+    <!-- Background Video -->
+    <div class="video-background">
+        <video autoplay muted loop id="bgVideo">
+            <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
     </div>
-  </div>
-  
-  <!-- Okno editoru -->
-  <div id="codeEditorModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Vibe Coding Editor</h2>
-      
-      <div class="editors">
-        <textarea id="htmlCode" placeholder="HTML kód"></textarea>
-        <textarea id="cssCode" placeholder="CSS kód"></textarea>
-        <textarea id="jsCode" placeholder="JS kód"></textarea>
-      </div>
-      
-      <button id="runCode">Spustit</button>
-      <iframe id="output" sandbox="allow-scripts"></iframe>
-    </div>
-  </div>
 
-  <!-- Background selector modal -->
-  <div id="bgModal" class="modal">
-    <div class="modal-content">
-      <span class="closeBg">&times;</span>
-      <h2>Vyberte pozadí</h2>
-      <div class="background-options">
-        <div class="bg-option active" data-bg="video/background1.mp4">
-          <div class="bg-preview" style="background: #333;"></div>
-          <span>Pozadí 1</span>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Header with Controls -->
+        <header class="header">
+            <div class="logo">
+                <h1>🎧 Lofi Coding Cafe</h1>
+            </div>
+            <nav class="nav-controls">
+                <button id="openCodeEditor" class="nav-btn">
+                    <span>Editor Kódu</span>
+                </button>
+                <button id="openTimer" class="nav-btn">
+                    <span>Časovač</span>
+                </button>
+                <button id="themeToggle" class="nav-btn">
+                    <span>Téma</span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Player Section -->
+        <main class="main-content">
+            <div class="player-card">
+                <div class="visualizer">
+                    <div class="visualizer-bars">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+                
+                <div class="track-info">
+                    <h2 id="trackTitle">Lofi Coding Session</h2>
+                    <p id="trackArtist">Chill beats to code to</p>
+                </div>
+
+                <div class="player-controls">
+                    <button id="prev" class="control-btn">⏮</button>
+                    <button id="play" class="control-btn play-btn">▶</button>
+                    <button id="next" class="control-btn">⏭</button>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="totalTime">0:00</span>
+                    </div>
+                </div>
+
+                <div class="additional-controls">
+                    <button id="shuffle" class="small-btn">🔀</button>
+                    <button id="like" class="small-btn">❤️</button>
+                    <button id="volume" class="small-btn">🔊</button>
+                </div>
+            </div>
+
+            <!-- Chat/Stats Section -->
+            <div class="side-panel">
+                <div class="stats">
+                    <h3>📊 Coding Stats</h3>
+                    <div class="stat-item">
+                        <span>Session Time:</span>
+                        <span id="sessionTime">25:00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Focus Level:</span>
+                        <span id="focusLevel">85%</span>
+                    </div>
+                </div>
+                
+                <div class="chat">
+                    <h3>💬 Community</h3>
+                    <div class="chat-messages">
+                        <div class="message">Welcome to Lofi Coding Cafe! 🎵</div>
+                        <div class="message">Happy coding everyone! 💻</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Code Editor Modal -->
+    <div id="codeEditorModal" class="modal">
+        <div class="modal-content code-editor">
+            <div class="modal-header">
+                <h2>💻 Code Editor</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="editor-container">
+                <div class="code-tabs">
+                    <button class="tab active" data-tab="html">HTML</button>
+                    <button class="tab" data-tab="css">CSS</button>
+                    <button class="tab" data-tab="js">JavaScript</button>
+                </div>
+                <div class="code-areas">
+                    <textarea id="htmlCode" class="code-area active" placeholder="Write your HTML here..."></textarea>
+                    <textarea id="cssCode" class="code-area" placeholder="Write your CSS here..."></textarea>
+                    <textarea id="jsCode" class="code-area" placeholder="Write your JavaScript here..."></textarea>
+                </div>
+                <div class="editor-controls">
+                    <button id="runCode" class="run-btn">🚀 Run Code</button>
+                    <button id="saveCode" class="save-btn">💾 Save</button>
+                </div>
+                <div class="output-container">
+                    <h3>Preview:</h3>
+                    <iframe id="output" sandbox="allow-scripts"></iframe>
+                </div>
+            </div>
         </div>
-        <div class="bg-option" data-bg="video/back2.mp4">
-          <div class="bg-preview" style="background: #555;"></div>
-          <span>Pozadí 2</span>
+    </div>
+
+    <!-- Timer Modal -->
+    <div id="timerModal" class="modal">
+        <div class="modal-content timer-modal">
+            <div class="modal-header">
+                <h2>⏱️ Pomodoro Timer</h2>
+                <span class="closeTimer">&times;</span>
+            </div>
+            <div class="timer-container">
+                <div class="timer-display">
+                    <div id="timerDisplay" class="time">25:00</div>
+                    <div class="timer-mode">Focus Time</div>
+                </div>
+                
+                <div class="timer-controls">
+                    <button id="startPause" class="timer-btn primary">▶ Start</button>
+                    <button id="restart" class="timer-btn">🔄 Restart</button>
+                    <button id="stop" class="timer-btn">⏹️ Stop</button>
+                </div>
+
+                <div class="timer-presets">
+                    <button class="preset-btn" data-time="1500">Focus (25:00)</button>
+                    <button class="preset-btn" data-time="300">Short Break (5:00)</button>
+                    <button class="preset-btn" data-time="900">Long Break (15:00)</button>
+                </div>
+
+                <div class="timer-stats">
+                    <div class="stat">
+                        <span class="stat-label">Sessions Completed:</span>
+                        <span class="stat-value" id="sessionsCount">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Video backgrounds -->
-  <video autoplay loop muted id="background1" class="background-video active">
-    <source src="video/background1.mp4" type="video/mp4">
-  </video>
-  <video autoplay loop muted id="background2" class="background-video">
-    <source src="video/back2.mp4" type="video/mp4">
-  </video>
-  
-  <footer>
-    <div class="player">
-      <div id="track-name">Track Name</div>
-      <audio id="audio" controls></audio>
-      <div class="buttons">
-        <button id="prev">⏮</button>
-        <button id="play">▶</button>
-        <button id="next">⏭</button>
-      </div>
-    </div>
-  </footer>
+    <!-- Audio Element -->
+    <audio id="audio" loop></audio>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
