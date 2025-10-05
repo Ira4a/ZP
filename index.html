@@ -44,9 +44,33 @@
     </div>
 </div>
 
-<video autoplay loop muted id="background">
-  <source src="video/background1.mp4" type="video/mp4">
-</video>
+<!-- Background video slider -->
+<div id="backgroundContainer">
+  <video autoplay loop muted id="background">
+    <source src="video/background1.mp4" type="video/mp4">
+    <source src="video/back2.mp4" type="video/mp4">
+    <source src="video/back3.mp4" type="video/mp4">
+    <source src="video/back4.mp4" type="video/mp4">
+  </video>
+</div>
+
+<!-- Background selector modal -->
+<div id="bgModal" class="modal">
+  <div class="modal-content">
+    <span class="closeBg">&times;</span>
+    <h2>Vyberte pozadí</h2>
+    <div class="background-options">
+      <div class="bg-option active" data-bg="video/background1.mp4">
+        <img src="thumb1.jpg" alt="Background 1">
+        <span>Pozadí 1</span>
+      </div>
+      <div class="bg-option" data-bg="video/back2.mp4">
+        <img src="thumb2.jpg" alt="Background 2">
+        <span>Pozadí 2</span>
+      </div>
+      <!-- Add more backgrounds as needed -->
+    </div>
+  </div>
   
 <footer>
   <div class="player">
