@@ -3,22 +3,22 @@ const tracks = [
     {
         name: "Lofi Coding Session",
         artist: "Chill Beats",
-        src: "https://assets.codepen.io/3364143/7btrrd.mp4?audio=1"
+        src: "https://cdn.pixabay.com/download/audio/2022/11/02/audio_8c97f84d98.mp3?filename=lofi-chill-159456.mp3"
     },
     {
         name: "Night Coding",
-        artist: "Study Vibes",
-        src: "https://assets.codepen.io/3364143/7btrrd.mp4?audio=2"
+        artist: "Study Vibes", 
+        src: "https://cdn.pixabay.com/download/audio/2023/03/13/audio_5e4c14f9e4.mp3?filename=chill-lofi-157100.mp3"
     },
     {
         name: "Rainy Window",
         artist: "Jazz Lofi",
-        src: "https://assets.codepen.io/3364143/7btrrd.mp4?audio=3"
+        src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c1d48fea0.mp3?filename=lofi-117135.mp3"
     },
     {
-        name: "Coffee Break",
+        name: "Coffee Break", 
         artist: "Relaxing Beats",
-        src: "https://assets.codepen.io/3364143/7btrrd.mp4?audio=4"
+        src: "https://cdn.pixabay.com/download/audio/2022/11/14/audio_4e5b8c7c2a.mp3?filename=lofi-chill-160693.mp3"
     }
 ];
 
@@ -26,7 +26,7 @@ let currentTrack = 0;
 let isPlaying = false;
 let isShuffle = false;
 
-const audio = document.getElementById('audio');
+const audio = new Audio();
 const trackTitle = document.getElementById('trackTitle');
 const trackArtist = document.getElementById('trackArtist');
 const playBtn = document.getElementById('play');
@@ -36,55 +36,88 @@ const totalTimeEl = document.getElementById('totalTime');
 
 // Initialize player
 function loadTrack(index) {
+    if (index < 0 || index >= tracks.length) return;
+    
+    currentTrack = index;
     const track = tracks[index];
     audio.src = track.src;
     trackTitle.textContent = track.name;
     trackArtist.textContent = track.artist;
     
+    audio.addEventListener('canplaythrough', () => {
+        totalTimeEl.textContent = formatTime(audio.duration);
+    });
+    
     if (isPlaying) {
-        audio.play();
+        audio.play().catch(e => console.log('Audio play error:', e));
     }
 }
 
-// Play/Pause
-playBtn.addEventListener('click', () => {
+// Play/Pause function
+function togglePlay() {
     if (audio.paused) {
-        audio.play();
-        isPlaying = true;
-        playBtn.textContent = "⏸";
-        startVisualizer();
+        audio.play().then(() => {
+            isPlaying = true;
+            playBtn.textContent = "⏸";
+            startVisualizer();
+        }).catch(e => {
+            console.log('Play failed:', e);
+            // Fallback: load track first
+            loadTrack(currentTrack);
+        });
     } else {
         audio.pause();
         isPlaying = false;
         playBtn.textContent = "▶";
         stopVisualizer();
     }
-});
+}
+
+// Play/Pause event
+playBtn.addEventListener('click', togglePlay);
 
 // Next/Previous
 document.getElementById('next').addEventListener('click', () => {
-    currentTrack = (currentTrack + 1) % tracks.length;
+    if (isShuffle) {
+        currentTrack = Math.floor(Math.random() * tracks.length);
+    } else {
+        currentTrack = (currentTrack + 1) % tracks.length;
+    }
     loadTrack(currentTrack);
+    if (isPlaying) {
+        audio.play().catch(e => console.log('Audio play error:', e));
+    }
 });
 
 document.getElementById('prev').addEventListener('click', () => {
-    currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+    if (isShuffle) {
+        currentTrack = Math.floor(Math.random() * tracks.length);
+    } else {
+        currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+    }
     loadTrack(currentTrack);
+    if (isPlaying) {
+        audio.play().catch(e => console.log('Audio play error:', e));
+    }
 });
 
 // Progress bar
 audio.addEventListener('timeupdate', () => {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progress.style.width = percent + '%';
-    
-    currentTimeEl.textContent = formatTime(audio.currentTime);
+    if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + '%';
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+    }
 });
 
 audio.addEventListener('loadedmetadata', () => {
-    totalTimeEl.textContent = formatTime(audio.duration);
+    if (audio.duration) {
+        totalTimeEl.textContent = formatTime(audio.duration);
+    }
 });
 
 function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -92,19 +125,34 @@ function formatTime(seconds) {
 
 // Visualizer
 function startVisualizer() {
-    document.querySelectorAll('.bar').forEach(bar => {
+    const bars = document.querySelectorAll('.bar');
+    bars.forEach(bar => {
         bar.style.animationPlayState = 'running';
     });
 }
 
 function stopVisualizer() {
-    document.querySelectorAll('.bar').forEach(bar => {
+    const bars = document.querySelectorAll('.bar');
+    bars.forEach(bar => {
         bar.style.animationPlayState = 'paused';
     });
 }
 
+// Audio ended event
+audio.addEventListener('ended', () => {
+    if (isShuffle) {
+        currentTrack = Math.floor(Math.random() * tracks.length);
+    } else {
+        currentTrack = (currentTrack + 1) % tracks.length;
+    }
+    loadTrack(currentTrack);
+    if (isPlaying) {
+        audio.play().catch(e => console.log('Audio play error:', e));
+    }
+});
+
 // Load first track
-loadTrack(currentTrack);
+loadTrack(0);
 
 // ---------- Editor kódu ----------
 const codeModal = document.getElementById('codeEditorModal');
@@ -185,10 +233,14 @@ document.getElementById('saveCode').addEventListener('click', () => {
 window.addEventListener('load', () => {
     const savedCode = localStorage.getItem('savedCode');
     if (savedCode) {
-        const codeData = JSON.parse(savedCode);
-        htmlCode.value = codeData.html || '';
-        cssCode.value = codeData.css || '';
-        jsCode.value = codeData.js || '';
+        try {
+            const codeData = JSON.parse(savedCode);
+            htmlCode.value = codeData.html || '';
+            cssCode.value = codeData.css || '';
+            jsCode.value = codeData.js || '';
+        } catch (e) {
+            console.log('Error loading saved code:', e);
+        }
     }
 });
 
@@ -206,7 +258,7 @@ const sessionsCountEl = document.getElementById('sessionsCount');
 
 let timer;
 let timeLeft = 25 * 60; // 25 minutes
-let isRunning = false;
+let isTimerRunning = false;
 let sessionsCompleted = 0;
 
 function updateTimerDisplay() {
@@ -222,24 +274,42 @@ openTimerBtn.addEventListener('click', () => {
 
 closeTimerBtn.addEventListener('click', () => {
     timerModal.style.display = 'none';
+    if (isTimerRunning) {
+        clearInterval(timer);
+        isTimerRunning = false;
+        startPauseBtn.textContent = "▶ Start";
+    }
 });
 
 window.addEventListener('click', (e) => {
     if (e.target === timerModal) {
         timerModal.style.display = 'none';
+        if (isTimerRunning) {
+            clearInterval(timer);
+            isTimerRunning = false;
+            startPauseBtn.textContent = "▶ Start";
+        }
     }
 });
 
-// Start/Pause
+// Start/Pause timer
 startPauseBtn.addEventListener('click', () => {
-    if (!isRunning) {
+    if (!isTimerRunning) {
         timer = setInterval(() => {
             if (timeLeft > 0) {
                 timeLeft--;
                 updateTimerDisplay();
+                
+                // Update session time in stats
+                const totalSeconds = (25 * 60) - timeLeft;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                document.getElementById('sessionTime').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
             } else {
                 clearInterval(timer);
-                isRunning = false;
+                isTimerRunning = false;
                 sessionsCompleted++;
                 sessionsCountEl.textContent = sessionsCompleted;
                 startPauseBtn.textContent = "▶ Start";
@@ -264,31 +334,33 @@ startPauseBtn.addEventListener('click', () => {
                 alert('⏰ Čas vypršel! Take a break!');
             }
         }, 1000);
-        isRunning = true;
+        isTimerRunning = true;
         startPauseBtn.textContent = "⏸ Pause";
     } else {
         clearInterval(timer);
-        isRunning = false;
+        isTimerRunning = false;
         startPauseBtn.textContent = "▶ Start";
     }
 });
 
-// Restart
+// Restart timer
 restartBtn.addEventListener('click', () => {
     clearInterval(timer);
     timeLeft = 25 * 60;
     updateTimerDisplay();
-    isRunning = false;
+    isTimerRunning = false;
     startPauseBtn.textContent = "▶ Start";
+    document.getElementById('sessionTime').textContent = "25:00";
 });
 
-// Stop
+// Stop timer
 stopBtn.addEventListener('click', () => {
     clearInterval(timer);
     timeLeft = 0;
     updateTimerDisplay();
-    isRunning = false;
+    isTimerRunning = false;
     startPauseBtn.textContent = "▶ Start";
+    document.getElementById('sessionTime').textContent = "00:00";
 });
 
 // Presets
@@ -298,12 +370,18 @@ presetBtns.forEach(btn => {
         clearInterval(timer);
         timeLeft = time;
         updateTimerDisplay();
-        isRunning = false;
+        isTimerRunning = false;
         startPauseBtn.textContent = "▶ Start";
+        
+        // Update session time display
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        document.getElementById('sessionTime').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     });
 });
 
-// Initialize
+// Initialize timer
 updateTimerDisplay();
 
 // Request notification permission
@@ -314,26 +392,73 @@ if ('Notification' in window) {
 // ---------- Theme Toggle ----------
 document.getElementById('themeToggle').addEventListener('click', () => {
     document.body.classList.toggle('light-theme');
+    // Update button text based on theme
+    const themeBtn = document.getElementById('themeToggle');
+    const isLight = document.body.classList.contains('light-theme');
+    themeBtn.querySelector('span').textContent = isLight ? '☀️ Téma' : '🌙 Téma';
 });
 
 // ---------- Additional Controls ----------
-document.getElementById('shuffle').addEventListener('click', () => {
+document.getElementById('shuffle').addEventListener('click', function() {
     isShuffle = !isShuffle;
-    document.getElementById('shuffle').style.background = isShuffle ? 
+    this.style.background = isShuffle ? 
         'rgba(102, 126, 234, 0.3)' : 'transparent';
 });
 
 document.getElementById('like').addEventListener('click', function() {
-    this.style.background = 'rgba(255, 0, 0, 0.3)';
-    this.textContent = '❤️';
+    this.style.background = this.style.background === 'rgba(255, 0, 0, 0.3)' ? 
+        'transparent' : 'rgba(255, 0, 0, 0.3)';
 });
 
-// Session timer (for stats)
-let sessionStartTime = Date.now();
+document.getElementById('volume').addEventListener('click', function() {
+    audio.muted = !audio.muted;
+    this.textContent = audio.muted ? '🔇' : '🔊';
+});
+
+// Focus level animation (for stats)
+let focusLevel = 85;
 setInterval(() => {
-    const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
-    const minutes = Math.floor(elapsed / 60);
-    const seconds = elapsed % 60;
-    document.getElementById('sessionTime').textContent = 
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}, 1000);
+    // Randomly fluctuate focus level between 80-95%
+    focusLevel = 80 + Math.random() * 15;
+    document.getElementById('focusLevel').textContent = Math.round(focusLevel) + '%';
+}, 5000);
+
+// Auto-add chat messages
+setInterval(() => {
+    const messages = [
+        "Just joined the coding session! 👋",
+        "This music is perfect for coding 🎵",
+        "Working on a new project 💻",
+        "Need coffee... ☕",
+        "The timer feature is awesome! ⏱️",
+        "Happy coding everyone! 🚀",
+        "Debugging... wish me luck! 🐛",
+        "The editor is so smooth! ✨"
+    ];
+    
+    const chatMessages = document.querySelector('.chat-messages');
+    if (chatMessages.children.length < 10) { // Limit messages
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.textContent = randomMessage;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}, 15000);
+
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Lofi Coding Cafe initialized!');
+    
+    // Test that all buttons are working
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+});
