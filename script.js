@@ -1,3 +1,120 @@
+// ---------- Background Slider ----------
+const backgroundVideo = document.getElementById('background');
+const changeBgBtn = document.getElementById('changeBackground');
+const bgModal = document.getElementById('bgModal');
+const closeBgBtn = document.querySelector('.closeBg');
+const bgOptions = document.querySelectorAll('.bg-option');
+
+// Background videos array
+const backgrounds = [
+  'video/background1.mp4',
+  'video/back2.mp4'
+  // Add more background paths here
+];
+
+let currentBgIndex = 0;
+
+// Open background selector
+changeBgBtn.addEventListener('click', () => {
+  bgModal.style.display = 'block';
+});
+
+// Close background selector
+closeBgBtn.addEventListener('click', () => {
+  bgModal.style.display = 'none';
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+  if (e.target === bgModal) {
+    bgModal.style.display = 'none';
+  }
+});
+
+// Change background when option is clicked
+bgOptions.forEach((option, index) => {
+  option.addEventListener('click', () => {
+    // Remove active class from all options
+    bgOptions.forEach(opt => opt.classList.remove('active'));
+    // Add active class to clicked option
+    option.classList.add('active');
+    
+    // Change background video
+    const bgSrc = option.getAttribute('data-bg');
+    changeBackground(bgSrc);
+    
+    // Close modal
+    bgModal.style.display = 'none';
+  });
+});
+
+// Function to change background
+function changeBackground(src) {
+  // Fade out
+  backgroundVideo.style.opacity = '0';
+  
+  setTimeout(() => {
+    // Change source
+    backgroundVideo.src = src;
+    // Reload video
+    backgroundVideo.load();
+    backgroundVideo.play();
+    
+    // Fade in
+    setTimeout(() => {
+      backgroundVideo.style.opacity = '1';
+    }, 100);
+  }, 500);
+}
+
+// Auto-rotate backgrounds (optional)
+let autoRotateInterval;
+
+function startAutoRotate(interval = 10000) { // 10 seconds
+  autoRotateInterval = setInterval(() => {
+    currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
+    changeBackground(backgrounds[currentBgIndex]);
+    
+    // Update active option in modal
+    bgOptions.forEach((option, index) => {
+      option.classList.toggle('active', index === currentBgIndex);
+    });
+  }, interval);
+}
+
+// Uncomment to enable auto-rotation
+// startAutoRotate(15000); // Change every 15 seconds
+
+// Manual background cycling (optional)
+function nextBackground() {
+  currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
+  changeBackground(backgrounds[currentBgIndex]);
+  
+  // Update active option in modal
+  bgOptions.forEach((option, index) => {
+    option.classList.toggle('active', index === currentBgIndex);
+  });
+}
+
+function prevBackground() {
+  currentBgIndex = (currentBgIndex - 1 + backgrounds.length) % backgrounds.length;
+  changeBackground(backgrounds[currentBgIndex]);
+  
+  // Update active option in modal
+  bgOptions.forEach((option, index) => {
+    option.classList.toggle('active', index === currentBgIndex);
+  });
+}
+
+// Add keyboard shortcuts for background cycling (optional)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') {
+    nextBackground();
+  } else if (e.key === 'ArrowLeft') {
+    prevBackground();
+  }
+});
+
 // ---------- Časovač ----------
 const timerModal = document.getElementById('timerModal');
 const openTimerBtn = document.getElementById('openTimer');
