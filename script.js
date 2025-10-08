@@ -1,11 +1,11 @@
 // ---------- Hudba ----------
 const tracks = [
-  {src: "music/track1.mp3", name: "Track 1", artist: "Artist 1"},
-  {src: "music/track2.mp3", name: "Track 2", artist: "Artist 2"},
-  {src: "music/track3.mp3", name: "Track 3", artist: "Artist 3"},
-  {src: "music/track4.mp3", name: "Track 4", artist: "Artist 4"},
-  {src: "music/track5.mp3", name: "Track 5", artist: "Artist 5"},
-  {src: "music/track6.mp3", name: "Track 6", artist: "Artist 6"}
+  {src: "music/track1.mp3", name: "Lofi Morning", artist: "Chillhop"},
+  {src: "music/track2.mp3", name: "Rainy Code", artist: "Lofi Beats"},
+  {src: "music/track3.mp3", name: "Coffee Break", artist: "Study Vibes"},
+  {src: "music/track4.mp3", name: "Night Coding", artist: "Jazz Lofi"},
+  {src: "music/track5.mp3", name: "Focus Flow", artist: "Deep Work"},
+  {src: "music/track6.mp3", name: "Urban Dreams", artist: "City Sounds"}
 ];
 
 let currentTrack = 0;
