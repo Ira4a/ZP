@@ -393,10 +393,10 @@ document.getElementById('volume').addEventListener('click', function() {
 });
 
 // Focus level animation (for stats)
-let focusLevel = 85;
+let focusLevel = 50;
 setInterval(() => {
-    // Randomly fluctuate focus level between 80-95%
-    focusLevel = 80 + Math.random() * 15;
+    // Randomly fluctuate focus level between 50-100%
+    focusLevel = 50 + Math.random() * 15;
     document.getElementById('focusLevel').textContent = Math.round(focusLevel) + '%';
 }, 5000);
 
