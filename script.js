@@ -1,5 +1,5 @@
 // ---------- Hudba ----------
-const tracks = [
+const audio = [
   {src: "music/track1.mp3"},
   {src: "music/track2.mp3"},
   {src: "music/track3.mp3"},
