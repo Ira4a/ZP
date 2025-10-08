@@ -1,26 +1,5 @@
 // ---------- Hudba ----------
-const tracks = [
-    {
-        name: "Lofi Coding Session",
-        artist: "Chill Beats",
-        src: "https://cdn.pixabay.com/download/audio/2022/11/02/audio_8c97f84d98.mp3?filename=lofi-chill-159456.mp3"
-    },
-    {
-        name: "Night Coding",
-        artist: "Study Vibes", 
-        src: "https://cdn.pixabay.com/download/audio/2023/03/13/audio_5e4c14f9e4.mp3?filename=chill-lofi-157100.mp3"
-    },
-    {
-        name: "Rainy Window",
-        artist: "Jazz Lofi",
-        src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c1d48fea0.mp3?filename=lofi-117135.mp3"
-    },
-    {
-        name: "Coffee Break", 
-        artist: "Relaxing Beats",
-        src: "https://cdn.pixabay.com/download/audio/2022/11/14/audio_4e5b8c7c2a.mp3?filename=lofi-chill-160693.mp3"
-    }
-];
+
 
 let currentTrack = 0;
 let isPlaying = false;
@@ -388,15 +367,6 @@ updateTimerDisplay();
 if ('Notification' in window) {
     Notification.requestPermission();
 }
-
-// ---------- Theme Toggle ----------
-document.getElementById('themeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
-    // Update button text based on theme
-    const themeBtn = document.getElementById('themeToggle');
-    const isLight = document.body.classList.contains('light-theme');
-    themeBtn.querySelector('span').textContent = isLight ? '☀️ Téma' : '🌙 Téma';
-});
 
 // ---------- Additional Controls ----------
 document.getElementById('shuffle').addEventListener('click', function() {
