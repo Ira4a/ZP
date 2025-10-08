@@ -1,9 +1,37 @@
+/* Custom Scrollbar for entire website */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 30, 46, 0.8);
+  border-radius: 5px;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #4e2c7d; 
   border-radius: 5px; 
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #211d26;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4e2c7d rgba(30, 30, 46, 0.8);
+}
+
+/* For Internet Explorer */
+body {
+  scrollbar-face-color: #4e2c7d;
+  scrollbar-track-color: rgba(30, 30, 46, 0.8);
+  scrollbar-arrow-color: #4e2c7d;
+  scrollbar-shadow-color: #4e2c7d;
+  scrollbar-highlight-color: #4e2c7d;
+  scrollbar-3dlight-color: #4e2c7d;
+  scrollbar-darkshadow-color: #4e2c7d;
 }
 
 * {
